@@ -3,8 +3,9 @@ COMANDOS
 /linux → para pedir ajuda sobre linux
 /short → respostas mais curtas
 /long → respostas mais detalhadas
-/pt → força resposta em português
+/formal → resposta mais profissional
 /en → força resposta em inglês
+/it → força resposta em italiano
 /code → foca em respostas com código
 /fix → pede pra corrigir o texto/código digitado
 /explain → pede explicação simples do que você escreveu
@@ -12,3 +13,4 @@ COMANDOS
 /translate → traduz o texto
 /improve → melhora/re-escreve o texto
 /teacher → IA explica como um professor
+/end → Encerra o programa

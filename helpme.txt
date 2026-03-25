@@ -1,3 +1,14 @@
-HELPME - COMANDOS
-
-/linux -> Para pedir ajuda sobre linux
+COMANDOS
+/helpme → mostra ajuda
+/linux → para pedir ajuda sobre linux
+/short → respostas mais curtas
+/long → respostas mais detalhadas
+/pt → força resposta em português
+/en → força resposta em inglês
+/code → foca em respostas com código
+/fix → pede pra corrigir o texto/código digitado
+/explain → pede explicação simples do que você escreveu
+/resume → resume o texto enviado
+/translate → traduz o texto
+/improve → melhora/re-escreve o texto
+/teacher → IA explica como um professor

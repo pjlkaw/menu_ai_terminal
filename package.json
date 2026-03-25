@@ -1,0 +1,20 @@
+{
+  "name": "menu_ai_terminal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "dotenv": "^17.3.1",
+    "fs": "^0.0.1-security",
+    "groq-sdk": "^1.1.1",
+    "inquirer": "^13.3.2",
+    "readline-sync": "^1.4.10"
+  }
+}

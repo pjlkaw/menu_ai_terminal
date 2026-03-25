@@ -1,0 +1,3 @@
+HELPME - COMANDOS
+
+/linux -> Para pedir ajuda sobre linux

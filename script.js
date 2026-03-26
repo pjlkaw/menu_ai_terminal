@@ -4,6 +4,7 @@ import Groq from 'groq-sdk'
 import inquirer from 'inquirer'
 import readlineSync from 'readline-sync'
 import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 
@@ -14,7 +15,7 @@ inquirer.prompt([
         type: 'rawlist',
         name: 'opcao',
         message: `${chalk.green(' ====== Qual AI gostaria de usar? ..: ')}`,
-        choices:['Texto', 'Documentos', 'Imagem'] 
+        choices:['Texto', 'Documentos (-Indisponível-)', 'Imagem (-Indisponível-)'] 
     }
 ]) 
 .then(async (resposta) => {
@@ -23,7 +24,9 @@ inquirer.prompt([
     if(resposta.opcao === 'Texto') {
 
         let input = ''
+        console.log(chalk.gray('Digite /end para encerrar'));
         const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
+        if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
             Responda APENAS em texto simples.
             NÃO use markdown.
@@ -36,12 +39,13 @@ inquirer.prompt([
             Responda apenas em texto puro (plain text).
             Qualquer uso de markdown é proibido.
             Se usar markdown, sua resposta está errada.
+            Use apenas acentuação, capitalização e pontuação.
         `
-        //Solicitação
+        //Chama AI
         async function getGroqChatCompletion(messages) {
         return groq.chat.completions.create({
                 messages,
-                model: "openai/gpt-oss-20b"
+                model: "llama-3.3-70b-versatile"
             })
         }
         let messages = [
@@ -53,7 +57,9 @@ inquirer.prompt([
         while (true) {
             input = readlineSync.question(chalk.green('\n ..: \n\n'))
             if (input.startsWith('/')) {
-                if (input === "/end") break;
+                if (input === "/end") break //encerrar programa
+                
+                function modos() {
                 // comandos com / e templates
                 if (input == "/helpme") {
                     const helpme = fs.readFileSync('./helpme.txt', 'utf-8')
@@ -99,8 +105,11 @@ inquirer.prompt([
                 else if (input == "/teacher") {
                     mode = 'Explique como um professor, com didática e exemplos simples.\n'
                 }
-                messages[0].content = config_ia_usuario + config_ia_padrao + mode// atualiza o system
-                console.log(chalk.yellow("---exec---"))
+                }
+                modos()
+
+                messages[0].content = config_ia_usuario + config_ia_padrao + mode // atualiza o prompt com o modo
+                console.log(chalk.yellow("---exec---")) // if (input.startsWith('/) && -modo existir) {}
                 continue
             }
 
@@ -126,6 +135,5 @@ inquirer.prompt([
     // com isso, tem como fazer a tradução dos arquivos?
     // Sim, a mesma estrutura pode ser usada para traduzir documentos. Depois de extrair o texto com pdf-parse, officeparser ou outras bibliotecas, envie a string extraída para a API de tradução. Se usar o OpenAI, você pode enviar um prompt do tipo “Translate this text to Portuguese: …” e o modelo retornará a tradução. Você pode fazer isso em um único comando no terminal. Basta colocar o caminho do arquivo como argumento, extrair o conteúdo, construir o prompt com a instrução de tradução, chamar a API e imprimir a resposta. Se preferir não usar a API, existem modelos open‑source como a T5 ou mBART que podem ser carregados via Hugging Face e usados localmente, mas exigem mais recursos. O fluxo permanece o mesmo: extração, chamada de tradução, exibição.
     }
-
 
 })

@@ -1,13 +1,11 @@
 import chalk from 'chalk'
-import dotenv from 'dotenv'
 import Groq from 'groq-sdk'
 import inquirer from 'inquirer'
 import readlineSync from 'readline-sync'
 import fs from 'fs'
-
+import dotenv from 'dotenv'
 dotenv.config()
 
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 inquirer.prompt([
     {
@@ -55,69 +53,76 @@ inquirer.prompt([
         while (true) {
             input = readlineSync.question(chalk.green('\n ..: \n\n'))
             if (input.startsWith('/')) {
+                const execMessage = () => console.log(chalk.yellow("---exec---")) // Mensagem para quando comando for executado
 
-                if (input === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} //encerrar programa
-                
+                if (input === "/end") { //encerrar program
+                    execMessage()
+                    console.log(chalk.gray('\nRetornando ao terminal padrão')); 
+                    return
+                }
+                if (input.startsWith('/') && input.includes(' ')) { //validação de inputs
+                    console.log(chalk.red('Não use espaços ao usar comandos'));
+                }
+
                 function modos() {
-                    const execMessage = console.log(chalk.yellow("---exec---")) // if (input.startsWith('/) && -modo existir) {}
                     //MODOS DE RESPOSTA
                     function modosResposta() {
                         if (input == "/helpme") {
-                            execMessage
+                            execMessage()
                             const helpme = fs.readFileSync('./helpme.txt', 'utf-8')
                             console.log(helpme)
                         }
                         else if (input == "/linux"){
-                            execMessage
+                            execMessage()
                             mode = 'Atue como especialista em Linux e terminal. Seja direto e prático.\n'
                         }
                         else if (input == "/short") {
-                            execMessage
+                            execMessage()
                             mode = 'Responda de forma extremamente curta, apenas o essencial.\n'
                         }
                         else if (input == "/long") {
-                            execMessage
+                            execMessage()
                             mode = 'Responda de forma detalhada, explicando bem cada parte.\n'
                         }
                         else if (input == "/formal") {
-                            execMessage
+                            execMessage()
                             mode = 'Use linguagem formal e profissional.\n'
                         }
                         else if (input == "/en") {
-                            execMessage
+                            execMessage()
                             mode = 'Responda sempre em inglês, independentemente do idioma do usuário.\n'
                         }
                         else if (input == "/it") {
-                            execMessage
+                            execMessage()
                             mode = 'Responda sempre em italiano, independentemente do idioma do usuário.\n'
                         }
                         else if (input == "/code") {
-                            execMessage
+                            execMessage()
                             mode = 'Responda preferencialmente com código e exemplos práticos.\n'
                         }
                         else if (input == "/fix") {
-                            execMessage
+                            execMessage()
                             mode = 'Corrija erros no conteúdo enviado e mostre a versão corrigida.\n'
                         }
                         else if (input == "/explain") {
-                            execMessage
+                            execMessage()
                             mode = 'Explique de forma simples e clara o que for enviado.\n'
                         }
                         else if (input == "/resume") {
-                            execMessage
+                            execMessage()
                             mode = 'Resuma o conteúdo enviado de forma clara e objetiva.\n'
                         }
                         else if (input == "/translate") {
-                            execMessage
+                            execMessage()
                             const input_translate = readlineSync.question(chalk.green('Traduzir para qual lingua? ..: '))
                             mode = `Traduza tudo que o usuário enviar para ${input_translate}, mantendo o sentido original.\n`
                         }
                         else if (input == "/improve") {
-                            execMessage
+                            execMessage()
                             mode = 'Reescreva o conteúdo enviado de forma mais clara, correta e profissional.\n'
                         }
                         else if (input == "/teacher") {
-                            execMessage
+                            execMessage()
                             mode = 'Explique como um professor, com didática e exemplos simples.\n'
                         }
                     }
@@ -150,6 +155,7 @@ inquirer.prompt([
                 continue
             }
 
+
             messages.push({ role: 'user', content: input})
             const chatCompletion = await getGroqChatCompletion(messages);
             const respostaAI = chatCompletion.choices[0]?.message?.content || "";
@@ -161,7 +167,7 @@ inquirer.prompt([
             }
 
             console.log(chalk.magenta(respostaAI));
-        } // corrigir ---exec--- aparecendo sempre q começa com barra e não quando há comando
+        }
     }
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {

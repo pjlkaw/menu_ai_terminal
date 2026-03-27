@@ -4,7 +4,6 @@ import Groq from 'groq-sdk'
 import inquirer from 'inquirer'
 import readlineSync from 'readline-sync'
 import fs from 'fs'
-import path from 'path'
 
 dotenv.config()
 
@@ -28,18 +27,18 @@ inquirer.prompt([
         const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
-            Responda APENAS em texto simples.
+            Responda em texto simples.
+            Use apenas acentuação, capitalização e pontuação.
             NÃO use markdown.
-            NÃO use listas, bullets, números ou símbolos.
+            NÃO use listas, bullets.
             NÃO use negrito, itálico ou blocos de código.
-            Use apenas frases normais com espaços e quebras de linha simples.
-            Se precisar mostrar código, escreva como texto simples sem formataação.
+            Use apenas frases normais com espaços.
+            Ao invés de quebras de linha faça "     ".
+            Se precisar mostrar código, escreva como texto simples com "//===" no ínicio de cada linha de código.
             Sempre responda em português, exceto se solicitado.
-            Se o usuário digitar algo começando com "/", ignore.
-            Responda apenas em texto puro (plain text).
+            Se o usuário digitar algo começando com "/" ou "_", ignore.
             Qualquer uso de markdown é proibido.
             Se usar markdown, sua resposta está errada.
-            Use apenas acentuação, capitalização e pontuação.
         `
         //Chama AI
         async function getGroqChatCompletion(messages) {
@@ -57,59 +56,98 @@ inquirer.prompt([
         while (true) {
             input = readlineSync.question(chalk.green('\n ..: \n\n'))
             if (input.startsWith('/')) {
-                if (input === "/end") break //encerrar programa
+
+                if (input === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} //encerrar programa
                 
                 function modos() {
-                // comandos com / e templates
-                if (input == "/helpme") {
-                    const helpme = fs.readFileSync('./helpme.txt', 'utf-8')
-                    console.log(helpme)
-                }
-                else if (input == "/linux"){
-                    mode = 'Atue como especialista em Linux e terminal. Seja direto e prático.\n'
-                }
-                else if (input == "/short") {
-                    mode = 'Responda de forma extremamente curta, apenas o essencial.\n'
-                }
-                else if (input == "/long") {
-                    mode = 'Responda de forma detalhada, explicando bem cada parte.\n'
-                }
-                else if (input == "/formal") {
-                    mode = 'Use linguagem formal e profissional.\n'
-                }
-                else if (input == "/en") {
-                    mode = 'Responda sempre em inglês, independentemente do idioma do usuário.\n'
-                }
-                else if (input == "/it") {
-                    mode = 'Responda sempre em italiano, independentemente do idioma do usuário.\n'
-                }
-                else if (input == "/code") {
-                    mode = 'Responda preferencialmente com código e exemplos práticos.\n'
-                }
-                else if (input == "/fix") {
-                    mode = 'Corrija erros no conteúdo enviado e mostre a versão corrigida.\n'
-                }
-                else if (input == "/explain") {
-                    mode = 'Explique de forma simples e clara o que for enviado.\n'
-                }
-                else if (input == "/resume") {
-                    mode = 'Resuma o conteúdo enviado de forma clara e objetiva.\n'
-                }
-                else if (input == "/translate") {
-                    const input_translate = readlineSync.question(chalk.green('Traduzir para qual lingua? ..: '))
-                    mode = `Traduza tudo que o usuário enviar para ${input_translate}, mantendo o sentido original.\n`
-                }
-                else if (input == "/improve") {
-                    mode = 'Reescreva o conteúdo enviado de forma mais clara, correta e profissional.\n'
-                }
-                else if (input == "/teacher") {
-                    mode = 'Explique como um professor, com didática e exemplos simples.\n'
-                }
+                    const execMessage = console.log(chalk.yellow("---exec---")) // if (input.startsWith('/) && -modo existir) {}
+                    //MODOS DE RESPOSTA
+                    function modosResposta() {
+                        if (input == "/helpme") {
+                            execMessage
+                            const helpme = fs.readFileSync('./helpme.txt', 'utf-8')
+                            console.log(helpme)
+                        }
+                        else if (input == "/linux"){
+                            execMessage
+                            mode = 'Atue como especialista em Linux e terminal. Seja direto e prático.\n'
+                        }
+                        else if (input == "/short") {
+                            execMessage
+                            mode = 'Responda de forma extremamente curta, apenas o essencial.\n'
+                        }
+                        else if (input == "/long") {
+                            execMessage
+                            mode = 'Responda de forma detalhada, explicando bem cada parte.\n'
+                        }
+                        else if (input == "/formal") {
+                            execMessage
+                            mode = 'Use linguagem formal e profissional.\n'
+                        }
+                        else if (input == "/en") {
+                            execMessage
+                            mode = 'Responda sempre em inglês, independentemente do idioma do usuário.\n'
+                        }
+                        else if (input == "/it") {
+                            execMessage
+                            mode = 'Responda sempre em italiano, independentemente do idioma do usuário.\n'
+                        }
+                        else if (input == "/code") {
+                            execMessage
+                            mode = 'Responda preferencialmente com código e exemplos práticos.\n'
+                        }
+                        else if (input == "/fix") {
+                            execMessage
+                            mode = 'Corrija erros no conteúdo enviado e mostre a versão corrigida.\n'
+                        }
+                        else if (input == "/explain") {
+                            execMessage
+                            mode = 'Explique de forma simples e clara o que for enviado.\n'
+                        }
+                        else if (input == "/resume") {
+                            execMessage
+                            mode = 'Resuma o conteúdo enviado de forma clara e objetiva.\n'
+                        }
+                        else if (input == "/translate") {
+                            execMessage
+                            const input_translate = readlineSync.question(chalk.green('Traduzir para qual lingua? ..: '))
+                            mode = `Traduza tudo que o usuário enviar para ${input_translate}, mantendo o sentido original.\n`
+                        }
+                        else if (input == "/improve") {
+                            execMessage
+                            mode = 'Reescreva o conteúdo enviado de forma mais clara, correta e profissional.\n'
+                        }
+                        else if (input == "/teacher") {
+                            execMessage
+                            mode = 'Explique como um professor, com didática e exemplos simples.\n'
+                        }
+                    }
+                
+                    //MODOS COM MEMÓRIA
+                    function modosMemoria() {
+                        let texto = ''
+                        messages.forEach((m) => {
+                        texto += `${m.role.toUpperCase()}: ${m.content} \n`})
+
+                        if (input == '/_save') {
+                            execMessage
+                            const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo..: "))
+
+                            fs.writeFileSync(`saves/${nomeSave}.txt`, texto)
+                            console.log(chalk.yellow('salvo'));
+                        }
+                        
+                        // if (input == '/_saveResume') {
+                            //usando mais uma instância da IA
+                        // }
+                    }
+                    modosMemoria()
+                    modosResposta()
                 }
                 modos()
+                
 
                 messages[0].content = config_ia_usuario + config_ia_padrao + mode // atualiza o prompt com o modo
-                console.log(chalk.yellow("---exec---")) // if (input.startsWith('/) && -modo existir) {}
                 continue
             }
 
@@ -117,17 +155,18 @@ inquirer.prompt([
             const chatCompletion = await getGroqChatCompletion(messages);
             const respostaAI = chatCompletion.choices[0]?.message?.content || "";
             messages.push({ role: 'assistant', content: respostaAI})
+
+            //apaga mensagens antigas da memória
             if (messages.length > 20) {
                 messages.splice(1,2)
             }
 
             console.log(chalk.magenta(respostaAI));
-        }
-    } //ADICIONAR FUNÇÃO DE SALVAR CONTEUDO DO TERMINAL EM UM BLOCO DE NOTAS COM TITULO PERSONALIZAVEL
-
+        } // corrigir ---exec--- aparecendo sempre q começa com barra e não quando há comando
+    }
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {
-    //     como fazer uma IA que resuma documentos (pdf, wordd, powerpoint, bloco de notas e etc) com javascript apenas no terminal
+    //como fazer uma IA que resuma documentos (pdf, wordd, powerpoint, bloco de notas e etc) com javascript apenas no terminal
     // Primeiro crie um projeto Node.js com npm init e instale as dependências necessárias. Para extrair texto use pdf-parse para PDF, officeparser ou mammoth para Word, officegen para PowerPoint e fs para arquivos de texto. Depois converta cada documento em uma string e concatene todo o conteúdo. Para resumir, faça uma chamada HTTP POST para a API do OpenAI ou use um modelo local como llama.cpp exposto via REST. No terminal, receba o caminho do arquivo como argumento, processe o conteúdo, envie a string para a API com a instrução “resuma em poucos parágrafos” e exiba a resposta no console. Certifique-se de que a chave da API esteja guardada em uma variável de ambiente. O fluxo completo pode ser organizado em um único script index.js que lê o arquivo, extrai o texto, chama a API e imprime o resumo.
 
     //  ..: 

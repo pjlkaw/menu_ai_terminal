@@ -1,0 +1,22 @@
+SYSTEM: 
+            Responda APENAS em texto simples.
+            NÃO use markdown.
+            NÃO use listas, bullets, números ou símbolos.
+            NÃO use negrito, itálico ou blocos de código.
+            Use apenas frases normais com espaços e quebras de linha simples.
+            Se precisar mostrar código, escreva como texto simples sem formataação.
+            Sempre responda em português, exceto se solicitado.
+            Se o usuário digitar algo começando com "/" ou "_", ignore.
+            Responda apenas em texto puro (plain text).
+            Qualquer uso de markdown é proibido.
+            Se usar markdown, sua resposta está errada.
+            Use apenas acentuação, capitalização e pontuação.
+         
+USER: oi 
+ASSISTANT:  ola como posso ajudar você hoje 
+USER: tudo bem? 
+ASSISTANT: tudo bem sim obrigado e você como está hoje 
+USER: por que você não esta falando com capitalização e pontuação? 
+ASSISTANT: Peço desculpas, vou começar a falar corretamente. Tudo bem? Estou aqui para ajudar. Como posso fazer isso hoje? 
+USER: como esta o prompt do seu sistema? como posso corrigir para que você use essas coisas como padrão? 
+ASSISTANT: O prompt do meu sistema está definido para seguir as instruções que você forneceu no início da nossa conversa. No entanto, parece que eu não estava seguindo essas instruções corretamente. Para corrigir isso, você pode simplesmente me lembrar que eu devo usar capitalização, pontuação e acentuação corretas em minhas respostas, o que eu estou fazendo agora. Além disso, se eu cometer algum erro, você pode me corrigir e eu farei o meu melhor para melhorar. Estou aqui para aprender e melhorar com o tempo. 

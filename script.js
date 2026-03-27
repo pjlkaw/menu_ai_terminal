@@ -27,13 +27,12 @@ inquirer.prompt([
         const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
-            Responda em texto simples.
+            Responda em texto e quebras de linha simples.
             Use apenas acentuação, capitalização e pontuação.
             NÃO use markdown.
             NÃO use listas, bullets.
             NÃO use negrito, itálico ou blocos de código.
             Use apenas frases normais com espaços.
-            Ao invés de quebras de linha faça "     ".
             Se precisar mostrar código, escreva como texto simples com "//===" no ínicio de cada linha de código.
             Sempre responda em português, exceto se solicitado.
             Se o usuário digitar algo começando com "/" ou "_", ignore.

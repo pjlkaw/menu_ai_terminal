@@ -134,11 +134,13 @@ inquirer.prompt([
                         texto += `${m.role.toUpperCase()}: ${m.content} \n`})
 
                         if (input == '/_save') {
-                            execMessage
+                            execMessage()
                             const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo..: "))
-
+                            // se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
                             fs.writeFileSync(`saves/${nomeSave}.txt`, texto)
-                            console.log(chalk.yellow('salvo'));
+                            console.log(chalk.green(
+                                `Arquivo salvo como ${nomeSave}.txt`)
+                            );
                         }
                         
                         // if (input == '/_saveResume') {

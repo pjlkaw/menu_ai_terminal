@@ -1,6 +1,7 @@
 COMANDOS
 
 /helpme → mostra ajuda
+/end → Encerra o programa
 /linux → para pedir ajuda sobre linux
 /short → respostas mais curtas
 /long → respostas mais detalhadas
@@ -14,11 +15,11 @@ COMANDOS
 /translate → traduz o texto
 /improve → melhora/re-escreve o texto
 /teacher → IA explica como um professor
-/end → Encerra o programa
 
 /_save → Salva conteúdo da conversa na pasta ./saves
 /_load → Carrega conversas anteriores
-/_saveResume
-/_memory → checa a memória
-/_memory_clean → limpa a memória
-/_memory_disable → desabilita a memória
+
+/_saveResume (--Indisponível--)
+/_memory → checa a memória (--Indisponível--)
+/_memory_clean → limpa a memória (--Indisponível--)
+/_memory_disable → desabilita a memória (--Indisponível--)

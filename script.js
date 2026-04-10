@@ -58,7 +58,9 @@ inquirer.prompt([
         let messages = [
             {role: 'system', content: config_ia_usuario + config_ia_padrao}
         ]
-        let mode = 'Responda com código, mas em texto simples, sem markdown ou formatação.\n'
+
+        // ADICIONAR: Modos são implementados aqui substituindo a personalidade padrão Lumin
+        let mode = 'Responda em texto simples, sem markdown ou formatação.\n'
 
         console.log(chalk.green('\n Escreva para a IA responder'))
         while (true) {
@@ -78,6 +80,7 @@ inquirer.prompt([
                 function modos() {
                     //MODOS DE RESPOSTA
                     function modosResposta() {
+                        //ADICIONAR: função para remover modo - ex: "/remove/linux"
                         if (input == "/helpme") {
                             execMessage()
                             const helpme = fs.readFileSync('./helpme.txt', 'utf-8')
@@ -147,11 +150,31 @@ inquirer.prompt([
                         if (input == '/_save') {
                             execMessage()
                             const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo..: "))
-                            // se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
+                            // ADICIONAR: se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
                             fs.writeFileSync(`saves/${nomeSave}.txt`, texto)
                             console.log(chalk.green(
                                 `Arquivo salvo como ${nomeSave}.txt`)
                             );
+                        }
+
+                        if (input == '/_load') {
+                            execMessage()
+                            console.log("Arquivos da pasta atual:");
+
+                            const arquivos = fs.readdirSync('./saves')
+                            //chamar essa variável para exibir saves atuais
+                            let exibirSaves = arquivos.forEach((save, index) => {
+                                console.log(`${index + 1} - ${save}`);
+                            })
+                            exibirSaves;
+
+                            const escolheSaveIndex = readlineSync.questionInt("Escolha qual arquivo carregar..: ") -1
+                            const nomeSave = arquivos[escolheSaveIndex]
+                            const caminhoSave = `./saves/${nomeSave}`
+                            
+                            const lerSave = fs.readFileSync(caminhoSave, 'utf-8')   
+                            
+                            mode = `Prossiga essa conversa baseada nesse texto ${lerSave}`
                         }
                         
                         // if (input == '/_saveResume') {

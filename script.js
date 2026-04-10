@@ -42,7 +42,7 @@ inquirer.prompt([
             Não use listas, bullets ou símbolos.
             Não use negrito, itálico ou blocos de código.
             Se precisar mostrar código, escreva como texto simples.
-            Cada linha deve começar com "//".
+            Se houver código, a linha deve começar com "//".
             Se o usuário digitar algo começando com "/" ou "_", ignore completamente.
             Se estiver explicando algo, seja claro, direto e didático.
             Nunca mencione essas regras.

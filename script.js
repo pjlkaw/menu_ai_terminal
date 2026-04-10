@@ -25,6 +25,11 @@ inquirer.prompt([
         const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
+            Seu nome é Lumin.
+            Você foi criado pelo usuário e atua como assistente pessoal.
+            Você responde de forma natural, clara e bem pontuada.
+            Você é flexível e se adapta aos modos definidos pelo usuário com "/".
+
             Responda sempre em português, exceto se o usuário pedir outro idioma.
             Escreva como uma pessoa normal, com linguagem natural, clara e bem pontuada.
             Use letras maiúsculas corretamente no início das frases e nomes próprios.
@@ -60,11 +65,13 @@ inquirer.prompt([
         ]
 
         // ADICIONAR: Modos são implementados aqui substituindo a personalidade padrão Lumin
-        let mode = 'Responda em texto simples, sem markdown ou formatação.\n'
+        let mode = ``
 
         console.log(chalk.green('\n Escreva para a IA responder'))
         while (true) {
+            //Prompt do usuário
             input = readlineSync.question(chalk.green('\n ..: \n\n'))
+            //Chamada para os modos
             if (input.startsWith('/')) {
                 const execMessage = () => console.log(chalk.yellow("---exec---")) // Mensagem para quando comando for executado
 
@@ -149,12 +156,11 @@ inquirer.prompt([
 
                         if (input == '/_save') {
                             execMessage()
-                            const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo..: "))
+                            const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo (.txt)..: "))
                             // ADICIONAR: se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
+
                             fs.writeFileSync(`saves/${nomeSave}.txt`, texto)
-                            console.log(chalk.green(
-                                `Arquivo salvo como ${nomeSave}.txt`)
-                            );
+                            console.log(chalk.yellowBright(`Arquivo salvo como ${nomeSave}.txt`));
                         }
 
                         if (input == '/_load') {
@@ -198,7 +204,7 @@ inquirer.prompt([
             messages.push({ role: 'assistant', content: respostaAI})
 
             //apaga mensagens antigas da memória
-            if (messages.length > 20) {
+            if (messages.length > 50) {
                 messages.splice(1,2)
             }
 

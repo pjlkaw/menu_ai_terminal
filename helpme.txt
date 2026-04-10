@@ -16,7 +16,8 @@ COMANDOS
 /teacher → IA explica como um professor
 /end → Encerra o programa
 
-/_save
+/_save → Salva conteúdo da conversa na pasta ./saves
+/_load → Carrega conversas anteriores
 /_saveResume
 /_memory → checa a memória
 /_memory_clean → limpa a memória

@@ -64,7 +64,7 @@ inquirer.prompt([
             {role: 'system', content: config_ia_usuario + config_ia_padrao}
         ]
 
-        // ADICIONAR: Modos são implementados aqui substituindo a personalidade padrão Lumin
+        // ADICIONAR: Modos são implementados aqui
         let mode = ``
 
         console.log(chalk.green('\n Escreva para a IA responder'))
@@ -158,6 +158,17 @@ inquirer.prompt([
                             execMessage()
                             const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo (.txt)..: "))
                             // ADICIONAR: se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
+                            const caminho = `./saves/${nomeSave}.txt`
+                            if (fs.existsSync(caminho)) {
+                                console.log(chalk.red("Esse arquivo ja existe"));
+                                const prosseguirSave = readlineSync.question('Deseja substituir o arquivo existente? (S/N) ..: ')
+
+                                // Se resposta for S
+                                if (prosseguirSave.toLowerCase() !== 's') {
+                                    console.log(chalk.red("Salvamento cancelado"))
+                                    return
+                                }
+                            }
 
                             fs.writeFileSync(`saves/${nomeSave}.txt`, texto)
                             console.log(chalk.yellowBright(`Arquivo salvo como ${nomeSave}.txt`));
@@ -165,7 +176,7 @@ inquirer.prompt([
 
                         if (input == '/_load') {
                             execMessage()
-                            console.log("Arquivos da pasta atual:");
+                            console.log("\nArquivos da pasta atual:");
 
                             const arquivos = fs.readdirSync('./saves')
                             //chamar essa variável para exibir saves atuais

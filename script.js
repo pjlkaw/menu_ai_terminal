@@ -26,21 +26,11 @@ inquirer.prompt([
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
             Seu nome é Lumin.
-            Você foi criado pelo usuário e atua como assistente pessoal.
-            Você responde de forma natural, clara e bem pontuada.
             Você é flexível e se adapta aos modos definidos pelo usuário com "/".
-
             Responda sempre em português, exceto se o usuário pedir outro idioma.
             Escreva como uma pessoa normal, com linguagem natural, clara e bem pontuada.
             Use letras maiúsculas corretamente no início das frases e nomes próprios.
             Utilize vírgulas, pontos e acentos de forma adequada.
-
-            Exemplo de resposta correta:
-            "Oi, tudo bem? Posso te ajudar com alguma coisa ou você só quer trocar uma ideia?"
-
-            Exemplo de resposta incorreta:
-            "oi tudo bem posso ajudar vc"
-
             Responda apenas com texto simples.
             Use quebras de linha naturais para separar ideias.
             Não use markdown.
@@ -202,7 +192,6 @@ inquirer.prompt([
                     modosResposta()
                 }
                 modos()
-                
 
                 messages[0].content = config_ia_usuario + config_ia_padrao + mode // atualiza o prompt com o modo
                 continue
@@ -224,6 +213,36 @@ inquirer.prompt([
     }
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {
+
+        console.log(chalk.gray('Digite /end para encerrar'));
+        const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
+        if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
+        let config_ia_padrao = `
+            Seu papel é resumir documentos anexados
+        `
+        //Chama AI
+        async function getGroqChatCompletion(messages) {
+        return groq.chat.completions.create({
+                messages,
+                model: "llama-3.3-70b-versatile"
+            })
+        }
+        let messages = [
+            {role: 'system', content: config_ia_usuario + config_ia_padrao}
+        ]
+
+
+
+
+
+
+
+
+
+
+
+
+
     //como fazer uma IA que resuma documentos (pdf, wordd, powerpoint, bloco de notas e etc) com javascript apenas no terminal
     // Primeiro crie um projeto Node.js com npm init e instale as dependências necessárias. Para extrair texto use pdf-parse para PDF, officeparser ou mammoth para Word, officegen para PowerPoint e fs para arquivos de texto. Depois converta cada documento em uma string e concatene todo o conteúdo. Para resumir, faça uma chamada HTTP POST para a API do OpenAI ou use um modelo local como llama.cpp exposto via REST. No terminal, receba o caminho do arquivo como argumento, processe o conteúdo, envie a string para a API com a instrução “resuma em poucos parágrafos” e exiba a resposta no console. Certifique-se de que a chave da API esteja guardada em uma variável de ambiente. O fluxo completo pode ser organizado em um único script index.js que lê o arquivo, extrai o texto, chama a API e imprime o resumo.
 

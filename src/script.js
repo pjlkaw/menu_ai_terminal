@@ -14,11 +14,17 @@ inquirer.prompt([
         type: 'rawlist',
         name: 'opcao',
         message: `${chalk.green(' ====== Qual AI gostaria de usar? ..: ')}`,
-        choices:['Texto', 'Documentos', 'Imagem (-Indisponível-)'] 
+        choices:[
+            new inquirer.Separator(),
+            'Texto', new inquirer.Separator(), 
+            'Documentos', new inquirer.Separator(), 
+            'Imagem (-Indisponível-)', new inquirer.Separator(), 
+            'Voz (-Indisponível-)', new inquirer.Separator(),
+            'Sair', new inquirer.Separator() 
+        ] 
     }
 ]) 
 .then(async (resposta) => {
-    
     // IA DE TEXTO ====================
     if(resposta.opcao === 'Texto') {
 
@@ -215,6 +221,7 @@ inquirer.prompt([
     }
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {
+        // IA DE Documentos ====================
         await documentosAI()
 
     //como fazer uma IA que resuma documentos (pdf, wordd, powerpoint, bloco de notas e etc) com javascript apenas no terminal

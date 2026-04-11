@@ -14,7 +14,7 @@ inquirer.prompt([
         type: 'rawlist',
         name: 'opcao',
         message: `${chalk.green(' ====== Qual AI gostaria de usar? ..: ')}`,
-        choices:['Texto', 'Documentos (-Indisponível-)', 'Imagem (-Indisponível-)'] 
+        choices:['Texto', 'Documentos', 'Imagem (-Indisponível-)'] 
     }
 ]) 
 .then(async (resposta) => {
@@ -216,18 +216,6 @@ inquirer.prompt([
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {
         await documentosAI()
-
-
-
-
-
-
-
-
-
-
-
-
 
     //como fazer uma IA que resuma documentos (pdf, wordd, powerpoint, bloco de notas e etc) com javascript apenas no terminal
     // Primeiro crie um projeto Node.js com npm init e instale as dependências necessárias. Para extrair texto use pdf-parse para PDF, officeparser ou mammoth para Word, officegen para PowerPoint e fs para arquivos de texto. Depois converta cada documento em uma string e concatene todo o conteúdo. Para resumir, faça uma chamada HTTP POST para a API do OpenAI ou use um modelo local como llama.cpp exposto via REST. No terminal, receba o caminho do arquivo como argumento, processe o conteúdo, envie a string para a API com a instrução “resuma em poucos parágrafos” e exiba a resposta no console. Certifique-se de que a chave da API esteja guardada em uma variável de ambiente. O fluxo completo pode ser organizado em um único script index.js que lê o arquivo, extrai o texto, chama a API e imprime o resumo.

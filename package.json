@@ -14,8 +14,12 @@
     "chalk": "^5.6.2",
     "dotenv": "^17.3.1",
     "fs": "^0.0.1-security",
+    "groq": "^5.20.0",
     "groq-sdk": "^1.1.1",
     "inquirer": "^13.3.2",
+    "officegen": "^0.6.5",
+    "officeparser": "^6.0.7",
+    "pdf-parse": "^2.4.5",
     "readline-sync": "^1.4.10"
   }
 }

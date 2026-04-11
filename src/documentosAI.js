@@ -1,6 +1,6 @@
 
 // import pdf from 'pdf-parse'; // Extraí texto de arquivos PDF
-// import officeparser from 'officeparser'; // Extraí texto de arquivos Word (.docx)
+import officeparser from 'officeparser' // Extraí texto de arquivos Word (.docx)
 // import officegen from 'officegen'; // Gera arquivos Office (Word, Excel, PowerPoint)
 import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
@@ -38,10 +38,16 @@ export async function documentosAI() {
             }
         ])
 
-        console.log(arquivo);
+        const caminho = `./docs/${arquivo}`
+
+        officeparser.parseOffice(caminho, (data, err) => {
+            if(err) {
+                console.log(chalk.red("Erro ao ler arquivo"));
+                return
+            }
+            console.log(data); //CONTEÚDO DO ARQUIVO
+        })
         
-
-
     }
     else if (opcao == 'Criar') {
         groqAI()

@@ -6,6 +6,8 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 
+import { documentosAI } from './documentosAI.js'
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 inquirer.prompt([
     {
@@ -213,23 +215,7 @@ inquirer.prompt([
     }
     // Documentos =====================
     if(resposta.opcao === 'Documentos') {
-
-        console.log(chalk.gray('Digite /end para encerrar'));
-        const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
-        if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
-        let config_ia_padrao = `
-            Seu papel é resumir documentos anexados
-        `
-        //Chama AI
-        async function getGroqChatCompletion(messages) {
-        return groq.chat.completions.create({
-                messages,
-                model: "llama-3.3-70b-versatile"
-            })
-        }
-        let messages = [
-            {role: 'system', content: config_ia_usuario + config_ia_padrao}
-        ]
+        await documentosAI()
 
 
 

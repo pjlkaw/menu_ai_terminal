@@ -1,15 +1,16 @@
 
-// import pdf from 'pdf-parse'; // Extraí texto de arquivos PDF
-import officeparser from 'officeparser' // Extraí texto de arquivos Word (.docx)
+import officeparser from 'officeparser' // Extraí texto de arquivos
 // import officegen from 'officegen'; // Gera arquivos Office (Word, Excel, PowerPoint)
 import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
 import inquirer from 'inquirer'
-import readlineSync from 'readline-sync'
-// import open from 'open'
-import Groq from 'groq-sdk' //AI
+import stringsimilarity from 'string-similarity'
+// import readlineSync from 'readline-sync'
+
 import dotenv from 'dotenv'
 dotenv.config()
+import Groq from 'groq-sdk' //AI
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function documentosAI() {
     const { opcao }= await inquirer.prompt([
@@ -21,13 +22,12 @@ export async function documentosAI() {
         }
     ]);
 
+    const arquivosPasta = fs.readdirSync('./docs')
+    const arquivosPastaAtual = console.log("Arquivos da pasta atual\n",arquivosPasta);
+
     //Anexo de arquivos
     if (opcao === 'Anexar') {
         console.log(chalk.gray("- É importante que o anexo deva estar em ./docs ! \n"));
-
-        const arquivosPasta = fs.readdirSync('./docs')
-        const arquivosPastaAtual = console.log("Arquivos da pasta atual\n",arquivosPasta);
-
         arquivosPastaAtual
         const { arquivo } = await inquirer.prompt([
             {
@@ -45,16 +45,25 @@ export async function documentosAI() {
                 console.log(chalk.red("Erro ao ler arquivo"));
                 return
             }
-            console.log(data); //CONTEÚDO DO ARQUIVO
+            let textoData = ''
+
+            data.content.forEach(item => {
+                if (item.text) {
+                    textoData += item.text + "\n"
+                }
+            });
+
+            console.log(textoData); //CONTEÚDO DO ARQUIVO
+
+            groqAI("Resuma esse conteúdo: \n \n" + textoData)
         })
-        
     }
     else if (opcao == 'Criar') {
-        groqAI()
+        console.log('Indisponível');
+        
     }
 
-    function groqAI() {
-        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+    function groqAI(content) {
         
         async function main() {
             const chatCompletion = await getGroqChatCompletion();
@@ -67,7 +76,7 @@ export async function documentosAI() {
                 messages: [
                     {
                         role: "user",
-                        content: "Explain the importance of fast language models",
+                        content: `${content}`
                     },
                 ],
                 model: "openai/gpt-oss-20b",

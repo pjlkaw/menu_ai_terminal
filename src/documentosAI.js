@@ -4,7 +4,7 @@ import officeparser from 'officeparser' // Extraí texto de arquivos
 import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
 import inquirer from 'inquirer'
-import stringsimilarity from 'string-similarity'
+import stringSimilarity from 'string-similarity'
 // import readlineSync from 'readline-sync'
 
 import dotenv from 'dotenv'
@@ -27,37 +27,83 @@ export async function documentosAI() {
 
     //Anexo de arquivos
     if (opcao === 'Anexar') {
-        console.log(chalk.gray("- É importante que o anexo deva estar em ./docs ! \n"));
-        arquivosPastaAtual
-        const { arquivo } = await inquirer.prompt([
-            {
-                type: 'list',
-                name: 'arquivo',
-                message: 'Escolha o arquivo ..:',
-                choices: arquivosPasta
+
+        resumeDoc()
+
+
+        async function resumeDoc() {
+            console.log(chalk.gray("- É importante que o anexo deva estar em ./docs ! \n"));
+            arquivosPastaAtual
+    
+            const { arquivo } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'arquivo',
+                    message: 'Escolha o arquivo ..:',
+                    choices: arquivosPasta
+                }
+            ]);
+    
+            let arquivoFinal = arquivo
+            let caminho = `./docs/${arquivoFinal}`
+            
+            //SUGESTÂO DE ARQUIVO
+            if (!fs.existsSync(caminho)) {
+                const match = stringSimilarity.findBestMatch(arquivo, arquivosPasta)
+                const sugestao = match.bestMatch.target
+                const score = match.bestMatch.rating
+                if (score > 0.4) {
+                    console.log('Arquivo não encontrado');
+                    console.log(`Você quis dizer: ${sugestao}?`)
+                    
+                    const { confirmar } = await inquirer.prompt([
+                        {
+                            type: 'confirm',
+                            name: 'confirmar',
+                            message: 'Usar este arquivo?',
+                            default: true
+                        }
+                    ]); 
+    
+                    if (confirmar) {
+                        arquivoFinal = sugestao
+                        caminho = `./docs/${arquivoFinal}`
+                    } 
+                    
+                }
+                else {
+                    console.log(chalk.red('Operação cancelada'))
+                    return
+                }
             }
-        ])
-
-        const caminho = `./docs/${arquivo}`
-
-        officeparser.parseOffice(caminho, (data, err) => {
-            if(err) {
-                console.log(chalk.red("Erro ao ler arquivo"));
+            else {
+                console.log(chalk.red('Arquivo não encontrado'))
                 return
             }
-            let textoData = ''
-
-            data.content.forEach(item => {
-                if (item.text) {
-                    textoData += item.text + "\n"
+    
+            officeparser.parseOffice(caminho, (data, err) => {
+                if(err) {
+                    console.log(chalk.red("Erro ao ler arquivo"));
+                    return
                 }
-            });
+                let textoData = ''
+    
+                data.content.forEach(item => {
+                    if (item.text) {
+                        textoData += item.text + "\n"
+                    }
+                });
+    
+                // console.log(textoData); //CONTEÚDO DO ARQUIVO
+    
+                groqAI("Resuma esse conteúdo: \n \n" + textoData)
+            })
+        }
 
-            console.log(textoData); //CONTEÚDO DO ARQUIVO
-
-            groqAI("Resuma esse conteúdo: \n \n" + textoData)
-        })
     }
+
+
+    //CRIAR ARQUIVO
     else if (opcao == 'Criar') {
         console.log('Indisponível');
         

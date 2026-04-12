@@ -5,14 +5,14 @@ import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import stringSimilarity from 'string-similarity'
-// import readlineSync from 'readline-sync'
+import readlineSync from 'readline-sync'
 
 import dotenv from 'dotenv'
 dotenv.config()
 import Groq from 'groq-sdk' //AI
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-export async function documentosAI() {
+export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADICIONAR WHILE=====================
     const { opcao }= await inquirer.prompt([
         {
             type: 'rawlist',
@@ -23,18 +23,30 @@ export async function documentosAI() {
     ]);
 
     const arquivosPasta = fs.readdirSync('./docs')
-    const arquivosPastaAtual = console.log("Arquivos da pasta atual\n",arquivosPasta);
 
     //Anexo de arquivos
     if (opcao === 'Anexar') {
+        console.log(chalk.gray("- É importante que o anexo deva estar em ./docs ! \n"));
 
-        resumeDoc()
+        const input = readlineSync.question(chalk.cyanBright(
+            `
+            ${chalk.magenta("Comandos:")} \n 
+            /resume
+            /end ..:
+            `
+        ))
+        if (input === "/exit") {
+            return
+        }
+
+        if (input === "/resume") {
+            resumeDoc()
+        }
 
 
         async function resumeDoc() {
-            console.log(chalk.gray("- É importante que o anexo deva estar em ./docs ! \n"));
-            arquivosPastaAtual
-    
+            console.log("\nArquivos da pasta atual\n",arquivosPasta);
+
             const { arquivo } = await inquirer.prompt([
                 {
                     type: 'input',
@@ -76,11 +88,7 @@ export async function documentosAI() {
                     return
                 }
             }
-            else {
-                console.log(chalk.red('Arquivo não encontrado'))
-                return
-            }
-    
+
             officeparser.parseOffice(caminho, (data, err) => {
                 if(err) {
                     console.log(chalk.red("Erro ao ler arquivo"));
@@ -96,8 +104,9 @@ export async function documentosAI() {
     
                 // console.log(textoData); //CONTEÚDO DO ARQUIVO
     
-                groqAI("Resuma esse conteúdo: \n \n" + textoData)
+                groqAI("resuma em no máximo 2 parágrafos"  + " esse conteúdo: \n \n" + textoData)
             })
+            
         }
 
     }

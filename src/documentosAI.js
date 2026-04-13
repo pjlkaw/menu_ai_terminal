@@ -13,62 +13,63 @@ import Groq from 'groq-sdk' //AI
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADICIONAR WHILE=====================
-    const { opcao }= await inquirer.prompt([
-        {
-            type: 'rawlist',
-            name: 'opcao',
-            message: `${chalk.cyan(' Documentos \n')}`,
-            choices:['Anexar', new inquirer.Separator(), 'Criar', new inquirer.Separator(), 'Sair'] 
-        }
-    ]);
+    while(true) {
+        const { opcao }= await inquirer.prompt([
+            {
+                type: 'rawlist',
+                name: 'opcao',
+                message: `${chalk.cyan(' Documentos \n')}`,
+                choices:['Anexar', new inquirer.Separator(), 'Criar', new inquirer.Separator(), 'Sair'] 
+            }
+        ]);
+        
+        //Anexo de arquivos
+        
+        if (opcao === 'Anexar') {
+            console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
+            const arquivosPasta = fs.readdirSync('./docs')
+            const input = readlineSync.question(chalk.cyanBright(
+                `           ${chalk.magenta("Comandos:")}
+                /free
+                /resume
+                /list (--Indisponível--)
+                /back
+                /end
+                ${chalk.magenta('-----------')}
+            ${chalk.magenta('Execute algum dos comandos listados..: ')}`
+            ))
+    
+            if (input === "") {
+                continue
+            }
+            else if (input === "/back") {
+                continue
+            }
+            else if (input === "/end") {
+                return
+            }
+    
+            else if (input === "/resume") {
+                const caminho = await escolheArquivo(arquivosPasta)
+                await resumeDoc(caminho)
+            }
 
-    const arquivosPasta = fs.readdirSync('./docs')
-
-    //Anexo de arquivos
-    if (opcao === 'Anexar') {
-        console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
-
-        const input = readlineSync.question(chalk.cyanBright(
-            `           ${chalk.magenta("Comandos:")}
-            /resume
-            /prompt (--Indisponível--)
-            /list (--Indisponível--)
-            /end 
-            ${chalk.magenta('-----------')}
-            ${chalk.magenta('..:')}`
-        ))
-
-        if (input === "") {
-            return
-        }
-
-        else if (input === "/end") {
-            return
-        }
-
-        else if (input === "/resume") {
-            const caminho = await escolheArquivo()
-            await resumeDoc(caminho)
-            async function resumeDoc(caminho) {
-                const promptUsuario = "resuma"
-                const resposta = await promptDoc(caminho, promptUsuario)
-                console.log(resposta)
+            else if (input === "/free") {
+                const caminho = await escolheArquivo(arquivosPasta)
+                await freeDoc(caminho)
             }
         }
-
         
-    }
-    
-    //CRIAR ARQUIVO
-    else if (opcao == 'Criar') {
-        console.log('Indisponível');
-    }
-    
-    else if (input === "/free") {
-        return
-    }
+        //CRIAR ARQUIVO
+        else if (opcao == 'Criar') {
+            console.log('Indisponível');
+        }
+        
+        else if (opcao == 'Sair') {
+            return
+        }
 
-
+    }
 
 
     //FUNCTIONS ============
@@ -112,7 +113,7 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         })
     }
 
-    async function escolheArquivo() {
+    async function escolheArquivo(arquivosPasta) {
         console.log("\nArquivos da pasta atual:\n",arquivosPasta);
 
         const { arquivo } = await inquirer.prompt([
@@ -133,8 +134,8 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
             const sugestao = match.bestMatch.target
             const score = match.bestMatch.rating
             if (score > 0.4) {
-                console.log('Arquivo não encontrado!');
-                console.log(`Você quis dizer: ${sugestao}?`)
+                console.log(chalk.yellow(`\nArquivo '${arquivo}' não encontrado!`));
+                console.log(chalk.yellow(`Você quis dizer: '${sugestao}' ?`))
                 
                 const { confirmar } = await inquirer.prompt([
                     {
@@ -158,4 +159,15 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         return caminho
     }
 
+    //FUNÇÕES DO MODO ANEXAR
+    async function resumeDoc(caminho) {
+        const promptUsuario = "resuma"
+        const resposta = await promptDoc(caminho, promptUsuario)
+        console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta))
+    }
+    async function freeDoc(caminho) {
+        const promptUsuario = readlineSync.question(chalk.green('\nO que gostaria de fazer com o arquivo? '))
+        const resposta = await promptDoc(caminho, promptUsuario)
+        console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
+    }
 }

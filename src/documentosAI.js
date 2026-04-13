@@ -30,19 +30,26 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
 
         const input = readlineSync.question(chalk.cyanBright(
             `
-            ${chalk.magenta("Comandos:")} \n 
+            ${chalk.magenta("Comandos:")}
             /resume
-            /end ..:
+            /prompt (--Indisponível--)
+            /list (--Indisponível--)
+            /end 
+            ..:
             `
         ))
-        if (input === "/exit") {
+
+        if (input === "") {
+            return
+        }
+
+        if (input === "/end") {
             return
         }
 
         if (input === "/resume") {
             resumeDoc()
         }
-
 
         async function resumeDoc() {
             console.log("\nArquivos da pasta atual\n",arquivosPasta);
@@ -51,7 +58,7 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
                 {
                     type: 'input',
                     name: 'arquivo',
-                    message: 'Escolha o arquivo ..:',
+                    message: `${chalk.magenta('Escolha o arquivo ..:')}`,
                     choices: arquivosPasta
                 }
             ]);
@@ -115,7 +122,6 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
     //CRIAR ARQUIVO
     else if (opcao == 'Criar') {
         console.log('Indisponível');
-        
     }
 
     function groqAI(content) {

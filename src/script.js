@@ -5,6 +5,7 @@ import readlineSync from 'readline-sync'
 import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
+process.env.DOTENV_SILENT = 'true';
 
 import { documentosAI } from './documentosAI.js'
 
@@ -13,7 +14,23 @@ inquirer.prompt([
     {
         type: 'rawlist',
         name: 'opcao',
-        message: `${chalk.green(' ====== Qual AI gostaria de usar? ..: ')}`,
+        message: `${chalk.magenta(
+            `
+===============================================================  ~
+|                                                          |  ~
+ █████                                   ███            
+░░███                                   ░░░               
+ ░███        █████ ████ █████████████   ████  ████████    
+ ░███       ░░███ ░███ ░░███░░███░░███ ░░███ ░░███░░███   
+ ░███        ░███ ░███  ░███ ░███ ░███  ░███  ░███ ░███   
+ ░███      █ ░███ ░███  ░███ ░███ ░███  ░███  ░███ ░███   
+ ███████████ ░░████████ █████░███ █████ █████ ████ █████
+░░░░░░░░░░░   ░░░░░░░░ ░░░░░ ░░░ ░░░░░ ░░░░░ ░░░░ ░░░░░ AI
+|                                                          |  ~
+===============================================================  ~
+
+O que deseja com Lumin?`
+        )}`,
         choices:[
             new inquirer.Separator(),
             'Texto', new inquirer.Separator(), 

@@ -24,19 +24,19 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         ]);
         
         //Anexo de arquivos
-        
         if (opcao === 'Anexar') {
             console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
             const arquivosPasta = fs.readdirSync('./docs')
-            const input = readlineSync.question(chalk.cyanBright(
-                `           ${chalk.magenta("Comandos:")}
+            const input = 
+            readlineSync.question(chalk.cyanBright(
+                `          ${chalk.magenta("Comandos:")}
                 /free
                 /resume
                 /list (--Indisponível--)
                 /back
                 /end
-                ${chalk.magenta('-----------')}
-            ${chalk.magenta('Execute algum dos comandos listados..: ')}`
+                ${chalk.magenta('-----------\n')}${chalk.magenta('Execute algum dos comandos listados..: ')}
+            `
             ))
     
             if (input === "") {
@@ -73,7 +73,6 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
 
 
     //FUNCTIONS ============
-
     async function groqAI(content) {
         const chatCompletion = await groq.chat.completions.create({
             messages: [

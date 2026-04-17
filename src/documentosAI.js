@@ -31,8 +31,7 @@ export async function documentosAI() {
         if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX
             console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
             const arquivosPasta = fs.readdirSync('./docs')
-            const input = 
-            readlineSync.question(chalk.cyanBright(
+            const input = readlineSync.question(chalk.cyanBright(
                 `          ${chalk.magenta("Comandos:")}
                 /free
                 /resume
@@ -72,38 +71,39 @@ export async function documentosAI() {
         //CRIAR ARQUIVO
         else if (opcao == 'Criar') {
             console.log(chalk.gray("- O arquivo será criado em ./docs !"));
-            let tipo = '.txt' //IDEIA DE USAR TIPO COMO PARÂMETRO
-            const input = readlineSync.question(chalk.cyanBright(
-                `          ${chalk.magenta("Comandos:")}
-                /docx
-                /xlsx 
-                /pptx
-                /pps
-                /back
-                /end
-                ${chalk.magenta('-----------\n')}${chalk.magenta('Execute algum fortmato para seu arquivo listados..: ')}
-            `
-            ))
+            let tipoArquivo = '.txt' //tipo padrão -> .txt //IDEIA DE USAR TIPO COMO PARÂMETRO
+            const { choice } = await inquirer.prompt([
+                {
+                    type: 'rawlist',
+                    message: 'Criar arquivo de ..:',
+                    name: 'choice',
+                    choices: ['.txt', '.docx', '.xlsx', '.pptx', '-Sair-']
+                }
+            ])
+            const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
 
-            if (input === "") {
-                continue
-            }
-            else if (input === "/back") {
-                continue
-            }
-            else if (input === "/end") {
+            if (choice === "-Sair") {
                 return
             }
 
-            else if (input === "/docx") {
-                return
+            else if (choice === ".txt") {
+                tipoArquivo = ".txt"                
             }
-            else if (input === "/pptx") {
-                return
+            else if (choice === ".docx") {
+                tipoArquivo = ".docx"
             }
-            else if (input === "/xlsx") {
-                return
+            else if (choice === ".xlsx") {
+                tipoArquivo = ".xlsx"
             }
+            else if (choice === ".pptx") {
+                tipoArquivo = ".pptx"
+            }
+
+            const caminhoArquivo = "./docs/"+nomeArquivo+tipoArquivo
+            console.log(caminhoArquivo);
+            fs.writeFile(caminhoArquivo, "oi", (err) => {
+                if (err) console.log(err)
+            })
 
 
         }

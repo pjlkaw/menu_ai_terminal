@@ -1,6 +1,10 @@
 
-import officeparser from 'officeparser' // Extraí texto de arquivos
-// import officegen from 'officegen'; // Gera arquivos Office (Word, Excel, PowerPoint)
+import officeparser from 'officeparser' // Extraí texto de .docx
+
+// import docx from "docx"; // criar docx
+// import exceljs from "exceljs"; // criar xlsx
+// import pptxgenjs from "pptxgenjs"; // criar pptx
+
 import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
 import inquirer from 'inquirer'
@@ -12,7 +16,7 @@ dotenv.config()
 import Groq from 'groq-sdk' //AI
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADICIONAR WHILE=====================
+export async function documentosAI() {
     while(true) {
         const { opcao }= await inquirer.prompt([
             {
@@ -24,7 +28,7 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         ]);
         
         //Anexo de arquivos
-        if (opcao === 'Anexar') {
+        if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX
             console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
             const arquivosPasta = fs.readdirSync('./docs')
             const input = 
@@ -32,7 +36,7 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
                 `          ${chalk.magenta("Comandos:")}
                 /free
                 /resume
-                /list (--Indisponível--)
+                /list
                 /back
                 /end
                 ${chalk.magenta('-----------\n')}${chalk.magenta('Execute algum dos comandos listados..: ')}
@@ -58,11 +62,50 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
                 const caminho = await escolheArquivo(arquivosPasta)
                 await freeDoc(caminho)
             }
+
+            else if (input === "/list") {
+                const caminho = await escolheArquivo(arquivosPasta)
+                await listDoc(caminho)
+            }
         }
         
         //CRIAR ARQUIVO
         else if (opcao == 'Criar') {
-            console.log('Indisponível');
+            console.log(chalk.gray("- O arquivo será criado em ./docs !"));
+            const input = 
+            readlineSync.question(chalk.cyanBright(
+                `          ${chalk.magenta("Comandos:")}
+                /docx
+                /xlsx 
+                /pptx
+                /pps
+                /back
+                /end
+                ${chalk.magenta('-----------\n')}${chalk.magenta('Execute algum fortmato para seu arquivo listados..: ')}
+            `
+            ))
+
+            if (input === "") {
+                continue
+            }
+            else if (input === "/back") {
+                continue
+            }
+            else if (input === "/end") {
+                return
+            }
+
+            else if (input === "/docx") {
+                return
+            }
+            else if (input === "/pptx") {
+                return
+            }
+            else if (input === "/xlsx") {
+                return
+            }
+
+
         }
         
         else if (opcao == 'Sair') {
@@ -112,7 +155,7 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         })
     }
 
-    async function escolheArquivo(arquivosPasta) {
+    async function escolheArquivo(arquivosPasta) { // retorna o caminho
         console.log("\nArquivos da pasta atual:\n",arquivosPasta);
 
         const { arquivo } = await inquirer.prompt([
@@ -169,4 +212,12 @@ export async function documentosAI() { //================ORGANIZAR CÓDIGO E ADI
         const resposta = await promptDoc(caminho, promptUsuario)
         console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
     }
+    async function listDoc(caminho) {
+        const promptUsuario = '\n resuma o conteúdo em listas'
+        const resposta = await promptDoc(caminho, promptUsuario)
+        console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
+    }
+
+    //FUNÇOES DO MODO CRIAR
+
 }

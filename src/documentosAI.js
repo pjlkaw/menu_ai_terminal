@@ -72,8 +72,8 @@ export async function documentosAI() {
         //CRIAR ARQUIVO
         else if (opcao == 'Criar') {
             console.log(chalk.gray("- O arquivo será criado em ./docs !"));
-            const input = 
-            readlineSync.question(chalk.cyanBright(
+            let tipo = '.txt' //IDEIA DE USAR TIPO COMO PARÂMETRO
+            const input = readlineSync.question(chalk.cyanBright(
                 `          ${chalk.magenta("Comandos:")}
                 /docx
                 /xlsx 
@@ -202,6 +202,7 @@ export async function documentosAI() {
     }
 
     //FUNÇÕES DO MODO ANEXAR
+
     async function resumeDoc(caminho) {
         const promptUsuario = "resuma"
         const resposta = await promptDoc(caminho, promptUsuario)
@@ -216,6 +217,11 @@ export async function documentosAI() {
         const promptUsuario = '\n resuma o conteúdo em listas'
         const resposta = await promptDoc(caminho, promptUsuario)
         console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
+    }
+
+    //tipo arquivo
+    async function tipoArquivo(tipo) {
+        
     }
 
     //FUNÇOES DO MODO CRIAR

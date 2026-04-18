@@ -1,5 +1,7 @@
 
 import officeparser from 'officeparser' // Extraí texto de .docx
+import pdfparse from 'pdf-parse' // Extraí texto de .pdf
+import exceljs from 'exceljs' // Extraí arquivo .xlsx
 
 // import docx from "docx"; // criar docx
 // import exceljs from "exceljs"; // criar xlsx
@@ -28,7 +30,7 @@ export async function documentosAI() {
         ]);
         
         //Anexo de arquivos
-        if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX
+        if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX .PDF
             console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
             const arquivosPasta = fs.readdirSync('./docs')
             const input = readlineSync.question(chalk.cyanBright(
@@ -84,18 +86,16 @@ export async function documentosAI() {
     
             const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
 
-            if (choice === "Texto") {
-                tipoArquivo = ".txt"                
-            }
-            else if (choice === "Word") {
-                tipoArquivo = ".docx"
-            }
-            else if (choice === "Excel") {
-                tipoArquivo = ".xlsx"
-            }
-            else if (choice === "PowerPoint") {
-                tipoArquivo = ".pptx"
-            }
+
+        if (choice === "Word") {
+            tipoArquivo = ".docx"
+        }
+        else if (choice === "Excel") {
+            tipoArquivo = ".xlsx"
+        }
+        else if (choice === "PowerPoint") {
+            tipoArquivo = ".pptx"
+        }    
 
             const caminhoArquivo = "./docs/"+nomeArquivo+tipoArquivo
             console.log(caminhoArquivo);

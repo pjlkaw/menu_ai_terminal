@@ -77,25 +77,23 @@ export async function documentosAI() {
                     type: 'rawlist',
                     message: 'Criar arquivo de ..:',
                     name: 'choice',
-                    choices: ['.txt', '.docx', '.xlsx', '.pptx', '-Sair-']
+                    choices: ['Texto', 'Word', 'Excel', 'PowerPoint', '-Sair-']
                 }
             ])
+            if (choice === "-Sair-") return
+    
             const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
 
-            if (choice === "-Sair") {
-                return
-            }
-
-            else if (choice === ".txt") {
+            if (choice === "Texto") {
                 tipoArquivo = ".txt"                
             }
-            else if (choice === ".docx") {
+            else if (choice === "Word") {
                 tipoArquivo = ".docx"
             }
-            else if (choice === ".xlsx") {
+            else if (choice === "Excel") {
                 tipoArquivo = ".xlsx"
             }
-            else if (choice === ".pptx") {
+            else if (choice === "PowerPoint") {
                 tipoArquivo = ".pptx"
             }
 
@@ -104,8 +102,6 @@ export async function documentosAI() {
             fs.writeFile(caminhoArquivo, "oi", (err) => {
                 if (err) console.log(err)
             })
-
-
         }
         
         else if (opcao == 'Sair') {

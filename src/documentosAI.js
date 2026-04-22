@@ -1,11 +1,11 @@
 
 import officeparser from 'officeparser' // Extraí texto de .docx
-import pdfparse from 'pdf-parse' // Extraí texto de .pdf
-import exceljs from 'exceljs' // Extraí arquivo .xlsx
+// import pdfparse from 'pdf-parse' // Extraí texto de .pdf
+// import exceljs from 'exceljs' // Extraí arquivo .xlsx
 
+// import pptxgenjs from "pptxgenjs"; // criar pptx e extrai conteúdo☻
 // import docx from "docx"; // criar docx
 // import exceljs from "exceljs"; // criar xlsx
-// import pptxgenjs from "pptxgenjs"; // criar pptx
 
 import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
@@ -16,6 +16,7 @@ import readlineSync from 'readline-sync'
 import dotenv from 'dotenv'
 dotenv.config()
 import Groq from 'groq-sdk' //AI
+import { type } from 'os';
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function documentosAI() {
@@ -24,7 +25,7 @@ export async function documentosAI() {
             {
                 type: 'rawlist',
                 name: 'opcao',
-                message: `${chalk.cyan(' Documentos \n')}`,
+                message: `${chalk.cyan('\nDocumentos \n')}`,
                 choices:['Anexar', new inquirer.Separator(), 'Criar', new inquirer.Separator(), 'Sair'] 
             }
         ]);
@@ -33,21 +34,21 @@ export async function documentosAI() {
         if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX .PDF
             console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
             const arquivosPasta = fs.readdirSync('./docs')
-            const input = readlineSync.question(chalk.cyanBright(
-                `          ${chalk.magenta("Comandos:")}
-                /free
-                /resume
-                /list
-                /back
-                /end
-                ${chalk.magenta('-----------\n')}${chalk.magenta('Execute algum dos comandos listados..: ')}
-            `
-            ))
+
+            console.log(chalk.yellowBright("Comandos:"));
+            console.log(chalk.magentaBright(
+                "/resume - /free - /list - /back - /end"
+            ));
+            const { input } = await inquirer.prompt([
+                {
+                    type: 'list',
+                    message: 'O que deseja fazer com o arquivo?',
+                    name: 'input',
+                    choices: ['resume', 'free', 'list', 'back', 'end']
+                }
+            ])
     
-            if (input === "") {
-                continue
-            }
-            else if (input === "/back") {
+            if (input === "/back") {
                 continue
             }
             else if (input === "/end") {

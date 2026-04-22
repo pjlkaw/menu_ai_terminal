@@ -16,7 +16,6 @@ import readlineSync from 'readline-sync'
 import dotenv from 'dotenv'
 dotenv.config()
 import Groq from 'groq-sdk' //AI
-import { type } from 'os';
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function documentosAI() {
@@ -44,7 +43,7 @@ export async function documentosAI() {
                     type: 'list',
                     message: 'O que deseja fazer com o arquivo?',
                     name: 'input',
-                    choices: ['resume', 'free', 'list', 'back', 'end']
+                    choices: ['/resume', '/free', '/list', '/back', '/end']
                 }
             ])
     
@@ -129,27 +128,36 @@ export async function documentosAI() {
     
     //Lê o arquivo e responde com IA
     async function promptDoc(caminho, prompt) {
-        return new Promise((resolve, reject) => {
-            officeparser.parseOffice(caminho, async (data, err) => {
-                if(err) {
-                    console.log(chalk.red("Erro ao ler arquivo"));
-                    return reject(err)
-                }
-                let textoData = ''
 
-                //envia separadamente o texto para textoData
-                data.content.forEach(item => {
-                    if (item.text) {
-                        textoData += item.text + "\n"
+        if (caminho.endsWith('.txt')) {
+            const conteudo = fs.readFileSync(caminho, "utf-8")
+            const resposta = await groqAI(prompt + '\n\nconteúdo:\n' + conteudo)
+            return resposta
+        }
+
+        else if (caminho.endsWith('.docx')) {
+            return new Promise((resolve, reject) => {
+                officeparser.parseOffice(caminho, async (data, err) => {
+                    if(err) {
+                        console.log(chalk.red("Erro ao ler arquivo"));
+                        return reject(err)
                     }
-                });
-
-                //Prompt AI
-                const resposta = await groqAI(prompt  + "\n\nconteúdo:\n" + textoData)
-                resolve(resposta)
-
+                    let textoData = ''
+    
+                    //envia separadamente o texto para textoData
+                    data.content.forEach(item => {
+                        if (item.text) {
+                            textoData += item.text + "\n"
+                        }
+                    });
+    
+                    //Prompt AI
+                    const resposta = await groqAI(prompt  + "\n\nconteúdo:\n" + textoData)
+                    resolve(resposta)
+    
+                })
             })
-        })
+        }
     }
 
     async function escolheArquivo(arquivosPasta) { // retorna o caminho
@@ -208,6 +216,8 @@ export async function documentosAI() {
     async function freeDoc(caminho) {
         const promptUsuario = readlineSync.question(chalk.green('\nO que gostaria de fazer com o arquivo? '))
         const resposta = await promptDoc(caminho, promptUsuario)
+
+        
         console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
     }
     async function listDoc(caminho) {
@@ -216,10 +226,9 @@ export async function documentosAI() {
         console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
     }
 
-    //tipo arquivo
-    async function tipoArquivo(tipo) {
-        
-    }
+
+
+
 
     //FUNÇOES DO MODO CRIAR
 

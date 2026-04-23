@@ -20,7 +20,7 @@
     "groq-sdk": "^1.1.1",
     "inquirer": "^13.3.2",
     "officeparser": "^6.0.7",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse-fork": "^1.2.0",
     "pptxgenjs": "^4.0.1",
     "readline-sync": "^1.4.10",
     "string-similarity": "^4.0.4"

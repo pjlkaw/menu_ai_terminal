@@ -1,6 +1,6 @@
 
 import officeparser from 'officeparser' // Extraí texto de .docx
-// import pdfparse from 'pdf-parse' // Extraí texto de .pdf
+import pdf from 'pdf-parse-fork'; // Extraí texto de .pdf
 // import exceljs from 'exceljs' // Extraí arquivo .xlsx
 
 // import pptxgenjs from "pptxgenjs"; // criar pptx e extrai conteúdo☻
@@ -131,7 +131,7 @@ export async function documentosAI() {
 
         if (caminho.endsWith('.txt')) {
             const conteudo = fs.readFileSync(caminho, "utf-8")
-            const resposta = await groqAI(prompt + '\n\nconteúdo:\n' + conteudo)
+            const resposta = await groqAI(prompt + '\n\nconteúdo do txt:\n' + conteudo)
             return resposta
         }
 
@@ -152,11 +152,18 @@ export async function documentosAI() {
                     });
     
                     //Prompt AI
-                    const resposta = await groqAI(prompt  + "\n\nconteúdo:\n" + textoData)
+                    const resposta = await groqAI(prompt  + "\n\nconteúdo do docx:\n" + textoData)
                     resolve(resposta)
     
                 })
             })
+        }
+
+        else if (caminho.endsWith('.pdf')) {
+            const dataBuffer = fs.readFileSync(caminho);
+            const data = await pdf(dataBuffer); // Extração simples de texto
+            const textoReduzido = data.text.substring(0, 15000);
+            return await groqAI(prompt + "\n\nconteúdo do pdf:\n" + textoReduzido);
         }
     }
 

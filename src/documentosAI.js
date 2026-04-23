@@ -30,12 +30,12 @@ export async function documentosAI() {
         ]);
         
         //Anexo de arquivos
-        if (opcao === 'Anexar') { // ==================== ADICIONAR SUPORTE PARA -> .TXT .PDF .XLSX .PDF
-            console.log(chalk.gray("- É importante que o anexo deva estar em ./docs !"));
+        if (opcao === 'Anexar') {
+            console.log(chalk.red("- É importante que o anexo deva estar em ./docs ! \n"));
             const arquivosPasta = fs.readdirSync('./docs')
 
             console.log(chalk.yellowBright("Comandos:"));
-            console.log(chalk.magentaBright(
+            console.log(chalk.yellowBright(
                 "/resume - /free - /list - /back - /end"
             ));
             const { input } = await inquirer.prompt([
@@ -184,13 +184,16 @@ export async function documentosAI() {
     }
 
     async function escolheArquivo(arquivosPasta) { // retorna o caminho
-        console.log("\nArquivos da pasta atual:\n",arquivosPasta);
+        console.log(chalk.yellowBright("\nArquivos da pasta atual:"));
+        arquivosPasta.forEach((arquivo,index) => {
+            console.log(` - ${arquivo} - `);
+        })
 
         const { arquivo } = await inquirer.prompt([
             {
-                type: 'input',
+                type: 'list',
                 name: 'arquivo',
-                message: `${chalk.magenta(`Escolha o arquivo ..:`)}`,
+                message: `${(`Escolha o arquivo ..:`)}`,
                 choices: arquivosPasta
             }
         ]);
@@ -204,8 +207,8 @@ export async function documentosAI() {
             const sugestao = match.bestMatch.target
             const score = match.bestMatch.rating
             if (score > 0.4) {
-                console.log(chalk.yellow(`\nArquivo '${arquivo}' não encontrado!`));
-                console.log(chalk.yellow(`Você quis dizer: '${sugestao}' ?`))
+                console.log(chalk.red(`\nArquivo '${arquivo}' não encontrado!`));
+                console.log(chalk.red(`Você quis dizer: '${sugestao}' ?`))
                 
                 const { confirmar } = await inquirer.prompt([
                     {
@@ -234,19 +237,19 @@ export async function documentosAI() {
     async function resumeDoc(caminho) {
         const promptUsuario = "resuma"
         const resposta = await promptDoc(caminho, promptUsuario)
-        console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta))
+        console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta + '\n'))
     }
     async function freeDoc(caminho) {
-        const promptUsuario = readlineSync.question(chalk.green('\nO que gostaria de fazer com o arquivo? '))
+        const promptUsuario = readlineSync.question(chalk.cyanBright('\nO que gostaria de fazer com o arquivo? '))
         const resposta = await promptDoc(caminho, promptUsuario)
 
         
-        console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
+        console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta + '\n'))
     }
     async function listDoc(caminho) {
         const promptUsuario = '\n resuma o conteúdo em listas'
         const resposta = await promptDoc(caminho, promptUsuario)
-        console.log(chalk.magenta(`${chalk.gray('Lumin:')}` + resposta))
+        console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta + '\n'))
     }
 
 

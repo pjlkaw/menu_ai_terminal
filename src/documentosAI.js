@@ -126,7 +126,7 @@ export async function documentosAI() {
         return chatCompletion.choices[0]?.message?.content || "";
     }
     
-    //Lê o arquivo e responde com IA
+    //Lê o arquivo baseado no tipo e responde com IA
     async function promptDoc(caminho, prompt) {
 
         if (caminho.endsWith('.txt')) {

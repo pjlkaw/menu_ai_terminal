@@ -107,7 +107,6 @@ export async function documentosAI() {
         else if (opcao == 'Sair') {
             return
         }
-
     }
 
 
@@ -134,7 +133,6 @@ export async function documentosAI() {
             const resposta = await groqAI(prompt + '\n\nconteúdo do txt:\n' + conteudo)
             return resposta
         }
-
         else if (caminho.endsWith('.docx')) {
             return new Promise((resolve, reject) => {
                 officeparser.parseOffice(caminho, async (data, err) => {
@@ -158,14 +156,12 @@ export async function documentosAI() {
                 })
             })
         }
-
         else if (caminho.endsWith('.pdf')) {
             const dataBuffer = fs.readFileSync(caminho);
             const data = await pdf(dataBuffer); // Extração simples de texto
             const textoReduzido = data.text.substring(0, 15000);
             return await groqAI(prompt + "\n\nconteúdo do pdf:\n" + textoReduzido);
         }
-
         else if (caminho.endsWith('.xlsx')) {
         const workbook = new exceljs.Workbook();
             await workbook.xlsx.readFile(caminho);
@@ -184,6 +180,7 @@ export async function documentosAI() {
             const textoReduzido = textoPlanilha.substring(0, 15000);
             return await groqAI(prompt + "\n\nConteúdo do xlsx:\n" + textoReduzido);
         }
+
     }
 
     async function escolheArquivo(arquivosPasta) { // retorna o caminho

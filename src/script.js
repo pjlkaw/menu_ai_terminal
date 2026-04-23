@@ -45,7 +45,6 @@ O que deseja com Lumin?`
     // IA DE TEXTO ====================
     if(resposta.opcao === 'Texto') {
 
-        let input = ''
         console.log(chalk.gray('Digite /end para encerrar'));
         const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
@@ -85,7 +84,13 @@ O que deseja com Lumin?`
         console.log(chalk.green('\n Escreva para a IA responder'))
         while (true) {
             //Prompt do usuário
-            input = readlineSync.question(chalk.green('\n ..: \n\n'))
+            const { input } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    message: '..:',
+                    name: 'input'
+                }
+            ])
             //Chamada para os modos
             if (input.startsWith('/')) {
                 const execMessage = () => console.log(chalk.yellow("---exec---")) // Mensagem para quando comando for executado

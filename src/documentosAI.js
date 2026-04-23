@@ -1,7 +1,7 @@
 
 import officeparser from 'officeparser' // Extraí texto de .docx
 import pdf from 'pdf-parse-fork'; // Extraí texto de .pdf
-// import exceljs from 'exceljs' // Extraí arquivo .xlsx
+import exceljs from 'exceljs'; // Extraí arquivo .xlsx
 
 // import pptxgenjs from "pptxgenjs"; // criar pptx e extrai conteúdo☻
 // import docx from "docx"; // criar docx
@@ -84,7 +84,7 @@ export async function documentosAI() {
             ])
             if (choice === "-Sair-") return
     
-            const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
+        const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
 
 
         if (choice === "Word") {
@@ -97,7 +97,7 @@ export async function documentosAI() {
             tipoArquivo = ".pptx"
         }    
 
-            const caminhoArquivo = "./docs/"+nomeArquivo+tipoArquivo
+        const caminhoArquivo = "./docs/"+nomeArquivo+tipoArquivo
             console.log(caminhoArquivo);
             fs.writeFile(caminhoArquivo, "oi", (err) => {
                 if (err) console.log(err)
@@ -164,6 +164,25 @@ export async function documentosAI() {
             const data = await pdf(dataBuffer); // Extração simples de texto
             const textoReduzido = data.text.substring(0, 15000);
             return await groqAI(prompt + "\n\nconteúdo do pdf:\n" + textoReduzido);
+        }
+
+        else if (caminho.endsWith('.xlsx')) {
+        const workbook = new exceljs.Workbook();
+            await workbook.xlsx.readFile(caminho);
+            
+            let textoPlanilha = '';
+
+            workbook.eachSheet((worksheet) => {
+                textoPlanilha += `\n--- Aba: ${worksheet.name} ---\n`;
+                worksheet.eachRow((row) => {
+                    // Transforma a linha em uma string separada por vírgulas (estilo CSV)
+                    const valores = Array.isArray(row.values) ? row.values.slice(1).join(', ') : '';
+                    textoPlanilha += valores + '\n';
+                });
+            });
+
+            const textoReduzido = textoPlanilha.substring(0, 15000);
+            return await groqAI(prompt + "\n\nConteúdo do xlsx:\n" + textoReduzido);
         }
     }
 

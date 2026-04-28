@@ -41,7 +41,7 @@ O que deseja com Lumin?`
         ] 
     }
 ]) 
-.then(async (resposta) => {
+.then(async (resposta) => { // SUBSTITUIR READLINESYNC POR INQUIRER
     // IA DE TEXTO ====================
     if(resposta.opcao === 'Texto') {
 

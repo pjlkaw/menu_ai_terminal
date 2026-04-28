@@ -11,7 +11,6 @@ import fs from 'fs'; // Leitura e escrita de arquivos no sistema de arquivos
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import stringSimilarity from 'string-similarity'
-import readlineSync from 'readline-sync'
 // .env e Groq
 import dotenv from 'dotenv'
 dotenv.config()
@@ -84,8 +83,13 @@ export async function documentosAI() {
             ])
             if (choice === "-Sair-") return
     
-        const nomeArquivo = readlineSync.question('Defina um nome para o arquivo ..: ')
-
+        const { nomeArquivo } = await inquirer.prompt([
+            {
+                type: 'input',
+                message: 'Defina um nome para o arquivo ..: ',
+                name: 'nomeArquivo'
+            }
+        ]) 
 
         if (choice === "Word") {
             tipoArquivo = ".docx"
@@ -240,7 +244,13 @@ export async function documentosAI() {
         console.log(chalk.magenta(`${chalk.gray('Lumin: \n')}` + resposta + '\n'))
     }
     async function freeDoc(caminho) {
-        const promptUsuario = readlineSync.question(chalk.cyanBright('\nO que gostaria de fazer com o arquivo? '))
+        const { promptUsuario }  = await inquirer.prompt([
+            {
+                type: 'input',
+                message: '\nO que gostaria de fazer com o arquivo? ',
+                name: 'promptUsuario'
+            }
+        ])
         const resposta = await promptDoc(caminho, promptUsuario)
 
         

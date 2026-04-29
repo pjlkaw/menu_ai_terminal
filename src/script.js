@@ -1,7 +1,6 @@
 import chalk from 'chalk'
 import Groq from 'groq-sdk'
 import inquirer from 'inquirer'
-import readlineSync from 'readline-sync'
 import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -41,12 +40,18 @@ O que deseja com Lumin?`
         ] 
     }
 ]) 
-.then(async (resposta) => { // SUBSTITUIR READLINESYNC POR INQUIRER
+.then(async (resposta) => {
     // IA DE TEXTO ====================
     if(resposta.opcao === 'Texto') {
 
         console.log(chalk.gray('Digite /end para encerrar'));
-        const config_ia_usuario = readlineSync.question(chalk.magenta('Como a IA deve responder..: '))
+        const { config_ia_usuario } = await inquirer.prompt([
+            {
+                type: 'input',
+                message: 'Configure a IA (Enter para ignorar)..: ',
+                name: 'config_ia_usuario'
+            }
+        ]) 
         if (config_ia_usuario === "/end") { console.log(chalk.gray('\nRetornando ao terminal padrão')); return} // encerra o programa
         let config_ia_padrao = `
             Seu nome é Lumin.
@@ -74,8 +79,11 @@ O que deseja com Lumin?`
                 model: "llama-3.3-70b-versatile"
             })
         }
+
+        let configFinal = (config_ia_usuario || '') + config_ia_padrao
+
         let messages = [
-            {role: 'system', content: config_ia_usuario + config_ia_padrao}
+            {role: 'system', content: configFinal}
         ]
 
         // ADICIONAR: Modos são implementados aqui
@@ -104,9 +112,9 @@ O que deseja com Lumin?`
                     console.log(chalk.red('Não use espaços ao usar comandos'));
                 }
 
-                function modos() {
+                async function modos() {
                     //MODOS DE RESPOSTA
-                    function modosResposta() {
+                    async function modosResposta() {
                         //ADICIONAR: função para remover modo - ex: "/remove/linux"
                         if (input == "/helpme") {
                             execMessage()
@@ -155,7 +163,13 @@ O que deseja com Lumin?`
                         }
                         else if (input == "/translate") {
                             execMessage()
-                            const input_translate = readlineSync.question(chalk.green('Traduzir para qual lingua? ..: '))
+                            const { input_translate } = await inquirer.prompt([
+                                {
+                                    type: 'input',
+                                    message: 'Traduzir para qual lingua? ..: ',
+                                    name: 'input_translate'
+                                }
+                            ])
                             mode = `Traduza tudo que o usuário enviar para ${input_translate}, mantendo o sentido original.\n`
                         }
                         else if (input == "/improve") {
@@ -169,19 +183,32 @@ O que deseja com Lumin?`
                     }
                 
                     //MODOS COM MEMÓRIA
-                    function modosMemoria() {
+                    async function modosMemoria() {
                         let texto = ''
                         messages.forEach((m) => {
                         texto += `${m.role.toUpperCase()}: ${m.content} \n`})
 
                         if (input == '/_save') {
                             execMessage()
-                            const nomeSave = readlineSync.question(chalk.green("Defina um nome para salvar o arquivo (.txt)..: "))
+                            const { nomeSave } = await inquirer.prompt([
+                                {
+                                    type: 'input',
+                                    message: 'Defina um nome para salvar o arquivo (.txt)..: ',
+                                    name: 'nomeSave'
+                                }
+                            ]) 
+
                             // ADICIONAR: se o arquivo ja existir, log('alterar arquivo (s/n) e permitir rescrever o conteudo ou mudar o nome do arquivos)
                             const caminho = `./saves/${nomeSave}.txt`
                             if (fs.existsSync(caminho)) {
                                 console.log(chalk.red("Esse arquivo ja existe"));
-                                const prosseguirSave = readlineSync.question('Deseja substituir o arquivo existente? (S/N) ..: ')
+                                const { prosseguirSave } = await inquirer.prompt([
+                                    {
+                                        type: 'input',
+                                        message: 'Deseja substituir o arquivo existente? (S/N) ..: ',
+                                        name: 'prosseguirSave'
+                                    }
+                                ])
 
                                 // Se resposta for S
                                 if (prosseguirSave.toLowerCase() !== 's') {
@@ -205,7 +232,14 @@ O que deseja com Lumin?`
                             })
                             exibirSaves;
 
-                            const escolheSaveIndex = readlineSync.questionInt("Escolha qual arquivo carregar..: ") -1
+                            const { escolheSave } = await inquirer.prompt([
+                                {
+                                    type: 'input',
+                                    message: 'Escolha qual arquivo carregar..: ',
+                                    name: 'escolheSave'
+                                }
+                            ])
+                            const escolheSaveIndex = escolheSave - 1
                             const nomeSave = arquivos[escolheSaveIndex]
                             const caminhoSave = `./saves/${nomeSave}`
                             
@@ -218,12 +252,12 @@ O que deseja com Lumin?`
                             //usando mais uma instância da IA
                         // }
                     }
-                    modosMemoria()
-                    modosResposta()
+                    await modosMemoria()
+                    await modosResposta()
                 }
-                modos()
+                await modos()
 
-                messages[0].content = config_ia_usuario + config_ia_padrao + mode // atualiza o prompt com o modo
+                messages[0].content = (config_ia_usuario || '') + config_ia_padrao + mode // atualiza o prompt com o modo
                 continue
             }
 

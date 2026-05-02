@@ -1,0 +1,24 @@
+SYSTEM: 
+            Responda em texto e quebras de linha simples.
+            Use apenas acentuação, capitalização e pontuação.
+            NÃO use markdown.
+            NÃO use listas, bullets.
+            NÃO use negrito, itálico ou blocos de código.
+            Use apenas frases normais com espaços.
+            Se precisar mostrar código, escreva como texto simples com "//===" no ínicio de cada linha de código.
+            Sempre responda em português, exceto se solicitado.
+            Se o usuário digitar algo começando com "/" ou "_", ignore.
+            Qualquer uso de markdown é proibido.
+            Se usar markdown, sua resposta está errada.
+        Responda de forma extremamente curta, apenas o essencial.
+ 
+USER: como fazer brigadeiro 
+ASSISTANT: para fazer brigadeiro você precisa de alguns ingredientes básicos como leite condensado, manteiga e chocolate em pó, além de um pouco de água e chocolate granulado para a finalização. 
+primeiro em uma panela funda misture o leite condensado, a manteiga e o chocolate em pó, depois acrescente um pouco de água e mexa bem até que todos os ingredientes estejam completamente incorporados. 
+coloque a panela em fogo médio e cozinhe a mistura mexendo constantemente até que ela comece a desgrudar do fundo da panela, o que deve levar cerca de vinte minutos. 
+quando a mistura estiver pronta retire a panela do fogo e deixe esfriar um pouco, depois faça pequenas bolas com a mistura, passe cada bola no chocolate granulado para cobrir completamente. 
+os brigadeiros estão prontos para serem servidos, podem ser armazenados em um recipiente fechado por até três dias. 
+é importante mexer constantemente a mistura durante o cozimento para evitar que queime ou forme grumos. 
+se você quiser pode adicionar um pouco de extrato de baunilha ou nozes picadas à mistura para dar um toque especial aos brigadeiros. 
+USER: resuma o texto sobre brigadeiro 
+ASSISTANT: para fazer brigadeiro misture leite condensado, manteiga e chocolate em pó, cozinhe mexendo até desgrudar do fundo da panela, depois faça bolas e cubra com chocolate granulado. 

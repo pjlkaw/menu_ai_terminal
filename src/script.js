@@ -10,7 +10,7 @@ import { documentosAI } from './documentosAI.js'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-console.log(
+console.log(chalk.magenta(
 `=====================================================================  ~
 |                                                                |  ~
      █████                                   ███            
@@ -22,8 +22,8 @@ console.log(
      ███████████ ░░████████ █████░███ █████ █████ ████ █████
     ░░░░░░░░░░░   ░░░░░░░░ ░░░░░ ░░░ ░░░░░ ░░░░░ ░░░░ ░░░░░ AI
 |                                                                |  ~
-=====================================================================  ~`
-);
+=====================================================================  ~ \n`
+));
 
 
 async function main() {
@@ -38,25 +38,39 @@ async function main() {
             new inquirer.Separator(),
             'Texto', new inquirer.Separator(), 
             'Documentos', new inquirer.Separator(), 
-            'Imagem (-Indisponível-)', new inquirer.Separator(), 
-            'Voz (-Indisponível-)', new inquirer.Separator(),
+            'Imagem', new inquirer.Separator(), 
+            'Voz', new inquirer.Separator(),
             'Sair', new inquirer.Separator() 
         ] 
     }
-]) 
-.then(async (resposta) => {
-    // IA DE TEXTO ====================
-    if(resposta.opcao === 'Texto') {
-        textoAI()  
-    }
+    ]) 
+    .then(async (resposta) => {
+        // IA DE TEXTO ====================
+        if(resposta.opcao === 'Texto') {
+            await textoAI()  
+        }
 
-    // Documentos =====================
-    if(resposta.opcao === 'Documentos') {
-        await documentosAI()
-    }
+        // Documentos =====================
+        if(resposta.opcao === 'Documentos') {
+            await documentosAI()
+        }
 
-})
-} main()
+        if (resposta.opcao === 'Imagem'){
+            // await imagemAI()
+
+            console.log(`O modo de "${resposta.opcao}" da Lumin está indisponivel no momento\n`);
+            main()
+
+        }
+        if (resposta.opcao === 'Voz'){
+            // await vozAI()
+
+            console.log(`O modo de "${resposta.opcao}" da Lumin está indisponivel no momento\n`);
+            main()
+        }
+    })
+} 
+main()
 
 async function textoAI() {
     console.log(chalk.gray('Digite /end para encerrar'));
@@ -104,7 +118,7 @@ async function textoAI() {
     // ADICIONAR: Modos são implementados aqui
     let mode = ``
 
-    console.log(chalk.green('\n Escreva para a IA responder'))
+    console.log(chalk.cyanBright('\n Escreva para a IA responder'))
     while (true) {
         //Prompt do usuário
         const { input } = await inquirer.prompt([
@@ -125,7 +139,9 @@ async function textoAI() {
             }
 
             if (input === "/back") {
-                console.log(chalk.gray('\nVoltando ao menu...'))
+                console.log(chalk.gray('\nVoltando ao menu...\n'))
+                console.log(chalk.magenta("====================================================================="));
+                
                 return main()
             }
 
@@ -271,6 +287,10 @@ async function textoAI() {
                     
                     // if (input == '/_saveResume') {
                         //usando mais uma instância da IA
+                    // }
+
+                    // if (input == '/_see/saves') {
+                        //apenas fs.readFileSync
                     // }
                 }
                 await modosMemoria()
